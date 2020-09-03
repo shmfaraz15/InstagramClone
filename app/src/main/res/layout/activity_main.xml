@@ -4,7 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:onClick="hideKeyboard"
     tools:context=".MainActivity">
+
+   <ProgressBar
+       android:id="@+id/progressbar_signUp"
+       style="?android:attr/progressBarStyleHorizontal"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_below="@+id/imageView"
+       android:backgroundTint="#FFF"
+       android:indeterminate="true"
+       android:indeterminateTint="#1a09d6"
+       android:max="100"
+       android:visibility="gone"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />
 
    <ImageView
        android:id="@+id/imageView"
@@ -60,6 +76,7 @@
        android:id="@+id/btn_signUp"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
+       android:onClick="signUp"
        android:text="Sign Up"
        app:layout_constraintBottom_toTopOf="@+id/txt_login"
        app:layout_constraintEnd_toEndOf="parent"

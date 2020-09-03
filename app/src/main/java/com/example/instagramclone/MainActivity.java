@@ -2,11 +2,17 @@ package com.example.instagramclone;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.hardware.input.InputManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +21,9 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SignUpCallback;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.List;
@@ -26,33 +34,53 @@ public class MainActivity extends AppCompatActivity {
 //    private Button saveButton;
 //    private TextView textViewGetData;
 
-    private EditText editTextUsername,editTextEmail,editTextPassword;
+    private EditText editTextUsername, editTextEmail, editTextPassword;
     private Button buttonSignUp;
     private TextView textViewLogin;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editTextUsername=findViewById(R.id.edt_userName);
-        editTextEmail=findViewById(R.id.edt_email);
-        editTextPassword=findViewById(R.id.edt_password);
+        setTitle("Sign Up");
 
-        buttonSignUp=findViewById(R.id.btn_signUp);
+        editTextUsername = findViewById(R.id.edt_userName);
+        editTextEmail = findViewById(R.id.edt_email);
+        editTextPassword = findViewById(R.id.edt_password);
 
-        textViewLogin=findViewById(R.id.txt_login);
+        editTextPassword.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                    signUp(buttonSignUp);
+                }
+                return false;
+            }
+        });
+
+        buttonSignUp = findViewById(R.id.btn_signUp);
+
+        textViewLogin = findViewById(R.id.txt_login);
+
+        progressBar = findViewById(R.id.progressbar_signUp);
 
         textViewLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this,LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
 
 
             }
         });
+
+        if (ParseUser.getCurrentUser() != null) {
+            ParseUser.logOut();
+        }
+        Log.i("ParseUser", "logged out");
 
 //        editTextName = findViewById(R.id.edt_Name);
 //        editTextPunchSpeed = findViewById(R.id.edt_punchSpeed);
@@ -63,6 +91,49 @@ public class MainActivity extends AppCompatActivity {
 //        saveButton = findViewById(R.id.btn_save);
 //
 //        textViewGetData=findViewById(R.id.txt_getData);
+    }
+
+    public void signUp(View view) {
+        ParseUser user = new ParseUser();
+        user.setUsername(editTextUsername.getText().toString());
+        user.setEmail(editTextEmail.getText().toString());
+        user.setPassword(editTextPassword.getText().toString());
+
+        if (editTextUsername.getText().toString().equals("") || editTextEmail.getText().toString().equals("") ||
+                editTextPassword.getText().toString().equals("")) {
+
+            FancyToast.makeText(MainActivity.this, "Username,Email,Password can't be empty",
+                    FancyToast.LENGTH_LONG, FancyToast.INFO, true).show();
+        } else {
+
+//            ProgressDialog progressDialog = new ProgressDialog(this);
+//            progressDialog.setMessage("Signing Up");
+//            progressDialog.show();
+            progressBar.setVisibility(View.VISIBLE);
+            user.signUpInBackground(new SignUpCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        FancyToast.makeText(MainActivity.this, editTextUsername.getText().toString() + " has signed up successfully",
+                                FancyToast.LENGTH_LONG, FancyToast.SUCCESS, true).show();
+                    } else {
+                        FancyToast.makeText(MainActivity.this, e.getMessage(),
+                                FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
+                    }
+                }
+            });
+            progressBar.setVisibility(View.INVISIBLE);
+            //progressDialog.dismiss();
+        }
+    }
+
+    public void hideKeyboard(View view) {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 //    public void save(View view) {
