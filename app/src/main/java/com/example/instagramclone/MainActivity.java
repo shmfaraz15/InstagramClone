@@ -78,9 +78,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (ParseUser.getCurrentUser() != null) {
-            ParseUser.logOut();
+            //ParseUser.logOut();
+            startActivity(new Intent(this,SocialMediaActivity.class));
         }
-        Log.i("ParseUser", "logged out");
+        Log.i("ParseUser", "logged in");
 
 //        editTextName = findViewById(R.id.edt_Name);
 //        editTextPunchSpeed = findViewById(R.id.edt_punchSpeed);
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     if (e == null) {
                         FancyToast.makeText(MainActivity.this, editTextUsername.getText().toString() + " has signed up successfully",
                                 FancyToast.LENGTH_LONG, FancyToast.SUCCESS, true).show();
+                        startActivity(new Intent(MainActivity.this,SocialMediaActivity.class));
                     } else {
                         FancyToast.makeText(MainActivity.this, e.getMessage(),
                                 FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
