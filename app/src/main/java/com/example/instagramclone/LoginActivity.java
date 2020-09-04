@@ -62,9 +62,10 @@ public class LoginActivity extends AppCompatActivity {
 
         if (ParseUser.getCurrentUser() != null) {
             //ParseUser.logOut();
+            Log.i("ParseUser", "logged in");
             startActivity(new Intent(this,SocialMediaActivity.class));
         }
-        Log.i("ParseUser", "logged in");
+
     }
 
     public void logIn(View view) {
@@ -75,6 +76,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null && e == null) {
                     FancyToast.makeText(LoginActivity.this, user.getUsername() + " has logged in successfully",
                             FancyToast.LENGTH_LONG, FancyToast.SUCCESS, true).show();
+
+                    Log.i("ParseUser", "logged in");
 
                     startActivity(new Intent(LoginActivity.this,SocialMediaActivity.class));
                 } else {

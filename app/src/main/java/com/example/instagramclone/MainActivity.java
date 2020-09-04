@@ -79,9 +79,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (ParseUser.getCurrentUser() != null) {
             //ParseUser.logOut();
+            Log.i("ParseUser", "logged in");
             startActivity(new Intent(this,SocialMediaActivity.class));
         }
-        Log.i("ParseUser", "logged in");
+
 
 //        editTextName = findViewById(R.id.edt_Name);
 //        editTextPunchSpeed = findViewById(R.id.edt_punchSpeed);

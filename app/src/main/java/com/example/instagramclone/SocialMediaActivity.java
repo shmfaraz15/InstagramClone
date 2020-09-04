@@ -5,8 +5,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.material.tabs.TabLayout;
+import com.parse.ParseUser;
 
 public class SocialMediaActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -29,5 +31,14 @@ public class SocialMediaActivity extends AppCompatActivity {
         viewPager.setAdapter(tabAdapter);
 
         tabLayout.setupWithViewPager(viewPager,false);
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ParseUser.logOut();
+        Log.i("ParseUser","logged out");
     }
 }
